@@ -7,14 +7,18 @@ var script  = (function(){
 
     script.actions = {
         joinARoom: function(){
+            var roomId = $(script.domElementsEnum.GAME_ID).val();
             console.log("Joining a Room...");
-            if($(script.domElementsEnum.GAME_ID).val()){
-                script.socket.emit("joinGame", $(script.domElementsEnum.GAME_ID).val());
+            if(roomId){
+                script.socket.emit("joinGame", roomId);
             }
         },
         startARoom: function(){
             console.log("Starting Game...");
             script.socket.emit("id");
+        },
+        openGamePopup: function(){
+            $("#gameInitPopup").show();
         }
     };
 
@@ -24,11 +28,12 @@ var script  = (function(){
         script.socket.on("gameInitiated", function(roomId){
             console.log(roomId);
         });
-    }
+    };
 
     script.bindEventHandlers = function(){
         $("#startAGame").on("click", script.actions.startARoom);
         $("#joinAGame").on("click", script.actions.joinARoom);
+        $("#initGame").on("click", script.actions.openGamePopup);
     };
 
     script.constructor = function(){
