@@ -4,7 +4,7 @@ exports.start = function(req, res){
         .on("error", function(){
 
         })
-        .on("gameStarted", function(){
-
+        .on("gameInitiated", function(id){
+            console.log(id);
         });
 };

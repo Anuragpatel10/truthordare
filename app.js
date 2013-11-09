@@ -29,12 +29,13 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-require("./config/config")(app);
-require("./config/URLMappings").mappings();
-
 var server = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
 var rtc = holla.createServer(server);
 var io = io.listen(server);
+
+require("./config/config")(app, io, rtc);
+require("./config/URLMappings").mappings();
+require("./modules/socket.")();

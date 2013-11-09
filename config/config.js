@@ -1,5 +1,7 @@
 exports = module.exports = function(app){
     global.app = app;
+    global.io = io;
+    global.rtc = rtc;
 
 
 
