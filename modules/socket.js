@@ -10,7 +10,7 @@ exports = module.exports = function () {
             console.log("Socket Room Created ---", id);
             console.log("Users in Room ---", io.sockets.clients(id));
             socket.join(id);
-            socket.emit("gameInitiated", {name: name, id: id});
+            socket.emit("gameInitiated", {name: name, roomId: id});
         });
 
 

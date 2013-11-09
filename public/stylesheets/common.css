@@ -155,7 +155,7 @@ h1 {
 	background-color: rgba(0,0,0,0.5);
 	transition: background .8s;
 }
-#gameInitPopup, #gameJoinPopup {
+#gameInitPopup, #gameJoinPopup, #waitingForUsersPopup {
 	position: fixed;
 	padding: 10px;
 	text-align: center;
@@ -166,9 +166,24 @@ h1 {
 	margin: 0 auto;
 	box-shadow: 0px 5px 40px rgba(0,0,0,0.8);
 }
-#gameInitPopup h3 { font-family: 'Oswald', sans-serif; font-size: 22px; margin: 15px 0; }
+#gameInitPopup h3, #gameJoinPopup h3, #waitingForUsersPopup h3 { 
+	font-family: 'Oswald', sans-serif; 
+	font-size: 22px; margin: 15px 0; 
+}
+#waitingForUsersPopup p {
+	font-size: 22px; margin: 15px 0;
+	color: #9f2c38;
+	font-family: 'Oswald', sans-serif;
+}
+#gameTokenField {
+	background-color: #fff;
+	color: #333;
+	border: 2px solid #6c9c5c;
+}
 
 /* >>> CLASSES <<<--------------------------- */
+.green { color: #6c9c5c;}
+.red { color: #9f2c38;}
 .landing-button {
 	outline: none;
 	padding: 20px 0px;
