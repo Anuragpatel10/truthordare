@@ -1,0 +1,135 @@
+/* >>> CSS RESET <<<--------------------------- */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, tt, var,
+b, u, i, center, ul,li,
+dl, dt, dd,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    outline: 0px;
+    vertical-align: baseline;
+    background: transparent;
+}
+a{ text-decoration:none; }
+
+/* >>> TYPOGRAPHY <<<--------------------------- */
+body {
+	font-family: 'Average Sans', sans-serif;
+}
+h1 {
+	font-family: 'Oswald', sans-serif;
+	font-size: 26px;
+}
+
+/* >>> COMMON <<<--------------------------- */
+body {
+	background-color: #222;
+	color: #fff
+}
+h1 {
+	color: #fff;
+}
+
+/* >>> ELEMENTS <<<--------------------------- */
+
+/* >>> IDs <<<--------------------------- */
+#container {
+	width: 1200px;
+	margin: 0 auto;
+}
+#header {
+	padding: 10px 0;
+	overflow: hidden;
+}
+#header h1 {
+	float: left;
+	width: 131px;
+	margin-top: 10px;
+	background: url('../images/logo.png') no-repeat;
+	display: inline-block;
+	height: 18px;
+}
+#header .button {
+	font-family: 'Oswald', sans-serif;
+	font-weight: bold;
+	transition: all .3s;
+	float: right;
+	min-width: 100px;
+	text-align: center;
+	background-color: #111;
+	color: #555;
+	padding: 10px 15px;
+	cursor: pointer;
+	display: inline-block;
+}
+#header .button:hover {
+	background-color: #9f2c38;
+	color: #fff;
+}
+#online-users {
+	overflow: hidden;
+}
+#online-users span.sep {
+	display: inline-block;
+	float: left;
+	height: 100px;
+	width: 40px;
+	background-color: #111;
+	color: #555;
+}
+#online-users .user {
+	overflow: hidden;
+	width: 100px;
+	cursor: pointer;
+	font-family: 'Oswald', sans-serif;
+	float: left;
+	height: 100px;
+	margin-left: 10px;
+	background-color: #c49839;
+}
+#online-users .user .info {
+	position: relative;
+	color: #333;
+	text-align: center;
+	top: 75px;
+	left: 0;
+	transition: top .3s;
+	width: 100%;
+}
+#online-users .user .add {
+	position: relative;
+	transition: top .3s;
+	padding: 10px;
+	line-height: 31px;
+	color: #333;
+	text-align: center;
+	top: 77px;
+	background-color: #b77d00;
+	font-size: 80px; 
+}
+#online-users .user:hover .info, #online-users .user:hover .add {
+	top: 25px;
+}
+#game-container {
+	margin-top: 50px; overflow: hidden; min-height: 800px;
+	background: url('../images/center-table-flat.png') no-repeat 230px center;
+}
+#video1, #video2, #video3, #video4, #videoMe{
+	position: relative;
+	background-color: #111;	
+	width: 200px;
+	height: 180px;
+}
+#video1 {left: 325px;}
+#video2 { left: -200px; top: 280px; }
+#video3 { left: 250px; top: 280px; }
+#video4 { left: -50px; top: 610px; }
+#videoMe { left: -700px; top: 610px;  }
+
+/* >>> CLASSES <<<--------------------------- */
+
