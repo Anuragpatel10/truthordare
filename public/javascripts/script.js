@@ -12,13 +12,32 @@ var script  = (function(){
             if(roomId){
                 script.socket.emit("joinGame", roomId);
             }
+            $("#gameJoinPopupContainer").show();
+            $("#gameJoinNameField").focus();
         },
         startARoom: function(){
             console.log("Starting Game...");
             script.socket.emit("id");
         },
         openGamePopup: function(){
-            $("#gameInitPopup").show();
+            $("#gameInitPopupContainer").show();
+            $("#gameInitNameField").focus();
+        },
+        closeGamePopup: function(){
+            $("#gameInitPopupContainer").hide();
+        },
+        closeJoinGamePopup: function(){
+            $("#gameJoinPopupContainer").hide();
+        },
+        processInitGame: function(){
+            script.actions.closeGamePopup();
+        },
+        processJoinGame: function(){
+            script.actions.closeJoinGamePopup();
+        },
+        openJoinGamePopup: function(){
+            $("#gameInitPopupContainer").show();
+            $("#gameInitNameField").focus();
         }
     };
 
@@ -34,6 +53,10 @@ var script  = (function(){
         $("#startAGame").on("click", script.actions.startARoom);
         $("#joinAGame").on("click", script.actions.joinARoom);
         $("#initGame").on("click", script.actions.openGamePopup);
+        $("#gameSubmit").on("click", script.actions.processInitGame);
+        $("#cancelGameSubmit").on("click", script.actions.closeGamePopup);
+        $("#gameJoinSubmit").on("click", script.actions.processJoinGame);
+        $("#cancelJoinGameSubmit").on("click", script.actions.closeJoinGamePopup);
     };
 
     script.constructor = function(){

@@ -29,13 +29,10 @@ h1 {
 /* >>> COMMON <<<--------------------------- */
 body {
 	background-color: #222;
-	color: #fff
 }
 h1 {
 	color: #fff;
 }
-
-/* >>> ELEMENTS <<<--------------------------- */
 
 /* >>> IDs <<<--------------------------- */
 #container {
@@ -150,6 +147,27 @@ h1 {
 	height: 30px;
 }
 
+#gameInitPopupContainer, #gameJoinPopupContainer {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0; left: 0;
+	background-color: rgba(0,0,0,0.5);
+	transition: background .8s;
+}
+#gameInitPopup, #gameJoinPopup {
+	position: fixed;
+	padding: 10px;
+	text-align: center;
+	width: 500px;
+	min-height: 250px;
+	background-color: #fff;
+	left: 0px; right: 0px; top: 254px;
+	margin: 0 auto;
+	box-shadow: 0px 5px 40px rgba(0,0,0,0.8);
+}
+#gameInitPopup h3 { font-family: 'Oswald', sans-serif; font-size: 22px; margin: 15px 0; }
+
 /* >>> CLASSES <<<--------------------------- */
 .landing-button {
 	outline: none;
@@ -165,7 +183,39 @@ h1 {
 	font-size: 36px;
 	transition: color .3s, background .8s;
 }
+.button {
+	outline: none;
+	padding: 10px 20px;
+	text-align: center;
+	cursor: pointer;
+	font-family: 'Oswald', sans-serif;
+	font-weight: bold;
+	border: 0px;
+	margin: 15px;
+	color: #ddd;
+	font-size: 24px;
+	transition: color .3s, background .5s;
+}
 .start { background-color: #6c9c5c; }
 .start:hover { background-color: #fff; color: #333; }
 .join { background-color: #9f2c38; }
 .join:hover { background-color: #fff; color: #333; }
+.simple-green { background-color: #6c9c5c;}
+.simple-red { background-color: #9f2c38;}
+.simple-red:hover, .simple-green:hover {background-color: #333; color: #fff; }
+
+.text {
+	outline: none;
+	width: 350px;
+	padding: 10px;
+	font-size: 24px;
+	margin: 15px;
+	color: #333;
+	background-color: #ddd;
+	border: 2px solid #bbb;
+	transition: border .5s;
+}
+.text:focus {
+	background-color: #fff;
+	border-color: #6c9c5c;
+}
