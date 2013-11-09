@@ -22,16 +22,13 @@ var script = (function () {
         processInitGame: function () {
             var username = $("#gameInitNameField").val();
             if (username) {
-                console.log("Starting Game...");
                 script.socket.emit("newGameRequest", username);
             }
-            //script.actions.closeGamePopup();
         },
         processJoinGame: function () {
             var roomId = $("#gameJoinTokenField").val();
             var username = $("#gameJoinNameField").val();
             if (roomId) {
-                console.log("Joining a Room...");
                 script.socket.emit("joinGame", {token: roomId, name: username});
             }
             script.actions.closeJoinGamePopup();
@@ -49,7 +46,6 @@ var script = (function () {
         sendMessage: function () {
             var number = $("#phoneNumber").val();
             if (number) {
-                console.log(number);
                 script.socket.emit("sendMessageInvite", number);
             }
         },
@@ -66,26 +62,58 @@ var script = (function () {
                 $(this).remove();
             });
             $("#header").after(script.templates.gameTemplate);
+        },
+        getUsersInRoom: function () {
+            if(script.roomData && script.roomData.currentRoom) {
+                script.socket.emit("getUsersInRoom", script.roomData.currentRoom);
+            }
+        },
+        populateDataAndStream: function () {
+            if(script.roomData.users) {
+                var i = 0;
+                script.roomData.users.forEach(function(user, idx) {
+                    if(user == script.roomData.initiator) {
+                        $("#videoMe").attr("data-user", user);
+                    } else {
+                        var $el = $("#video" + (i+1));
+                        if($el && !$el.attr("data-user")) {
+                            $el.attr("data-user", user);
+                            i++;
+                        }
+                    }
+                });
+            }
         }
     };
 
     script.socketInitialize = function () {
-        script.socket = io.connect('http://10.1.1.69:8000');
+        script.socket = io.connect('http://10.1.1.18:8000');
 
         script.socket.on("gameInitiated", function (resp) {
-            console.log(resp);
             script.roomData = script.roomData || {};
             script.roomData.currentRoom = resp.roomId;
+            script.roomData.initiator = resp.name;
             script.actions.showRoomToken(resp.roomId);
         });
 
         script.socket.on("newPlayerJoined", function (data) {
-            console.log(data);
             script.actions.startGame();
+            script.actions.getUsersInRoom();
         });
 
         script.socket.on("joinedGame", function (data) {
-            console.log(data);
+            script.roomData = script.roomData || {};
+            script.roomData.initiator = data.name;
+            script.roomData.currentRoom = data.token;
+            script.actions.getUsersInRoom();
+        });
+
+        script.socket.on("usersInRoomResponse", function (data) {
+            script.roomData = script.roomData || {};
+            if(data.length) {
+                script.roomData.users = data;
+                script.actions.populateDataAndStream();
+            }
         });
 
         script.socket.on("inviteResponse", function (data){

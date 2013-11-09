@@ -7,7 +7,7 @@ exports = module.exports = function () {
     io.sockets.on('connection', function (socket) {
         socket.on("newGameRequest", function (name) {
             var id = uid(7);
-            usersInRoom[name] = id;
+            usersInRoom[id] = [name];
             console.log("Socket Room Created ---", id);
             console.log("Users in Room ---", io.sockets.clients(id));
             socket.join(id);
@@ -17,8 +17,12 @@ exports = module.exports = function () {
 
         socket.on("joinGame", function (data) {
             socket.join(data.token);
-            usersInRoom[data.name] = data.token;
-            io.sockets.in(data.token).emit("newPlayerJoined", usersInRoom);
+            if(usersInRoom && usersInRoom[data.token] && usersInRoom[data.token].length > 0) {
+                usersInRoom[data.token].push(data.name);
+            } else {
+                usersInRoom[data.token] = [data.name];
+            }
+            io.sockets.in(data.token).emit("newPlayerJoined", "success");
             socket.emit("joinedGame", data);
         });
 
@@ -26,6 +30,11 @@ exports = module.exports = function () {
             sendMessageInviteThroughTwilio.apply(that, [number, function(err, result){
                 socket.emit("inviteResponse", {"error":err, "result": "SENT"});
             }]);
+        });
+
+        socket.on("getUsersInRoom", function(roomId) {
+            console.log("Sending users list for room ", roomId);
+            socket.emit("usersInRoomResponse", usersInRoom[roomId]);
         });
     });
 };
