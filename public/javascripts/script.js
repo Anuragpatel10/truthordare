@@ -80,7 +80,7 @@ var script = (function () {
                 console.log("Sorry! couldn't send the message! Try Again");
             } else {
                 console.log("Message Successfully Sent!");
-                $("#inviteButton").val("");
+                $("#phoneNumber").val("");
             }
         })
     };
