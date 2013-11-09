@@ -162,8 +162,8 @@ h1 {
 	width: 500px;
 	min-height: 250px;
 	background-color: #fff;
-	left: 0px; right: 0px; top: 254px;
-	margin: 0 auto;
+	left: 0px; right: 0px; top: 110px;
+	margin: auto;
 	box-shadow: 0px 5px 40px rgba(0,0,0,0.8);
 }
 #gameInitPopup h3, #gameJoinPopup h3, #waitingForUsersPopup h3 { 
