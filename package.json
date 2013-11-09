@@ -12,6 +12,6 @@
         "nko": "*",
         "holla": "*",
         "socket.io": "*",
-        "uuid":"*"
+        "uid":"*"
     }
 }

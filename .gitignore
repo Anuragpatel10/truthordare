@@ -6,4 +6,4 @@ node_modules/ejs
 node_modules/nko
 node_modules/socket.io
 node_modules/holla
-node_modules/uuid
+node_modules/uid
