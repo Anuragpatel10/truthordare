@@ -52,11 +52,25 @@ var script = (function () {
                 console.log(number);
                 script.socket.emit("sendMessageInvite", number);
             }
+        },
+        getTemplates: function () {
+            script.templates = {};
+            script.templates.gameTemplate = $("#gameContainer")[0].outerHTML;
+            $("#gameContainer").remove();
+        },
+        startGame: function () {
+            script.actions.closeJoinGamePopup();
+            script.actions.closeGamePopup();
+
+            $("#content").fadeOut("slow", function () {
+                $(this).remove();
+            });
+            $(document.body).append(script.templates.gameTemplate);
         }
     };
 
     script.socketInitialize = function () {
-        script.socket = io.connect('http://localhost:8000');
+        script.socket = io.connect('http://10.1.1.69:8000');
 
         script.socket.on("gameInitiated", function (resp) {
             console.log(resp);
@@ -67,6 +81,7 @@ var script = (function () {
 
         script.socket.on("newPlayerJoined", function (data) {
             console.log(data);
+            script.actions.startGame();
         });
 
         script.socket.on("joinedGame", function (data) {
@@ -74,8 +89,6 @@ var script = (function () {
         });
 
         script.socket.on("inviteResponse", function (data){
-            console.log(">>>>>>>>>>>>>>>>>>");
-            console.log(data);
             if(data.error){
                 console.log("Sorry! couldn't send the message! Try Again");
             } else {
@@ -98,6 +111,7 @@ var script = (function () {
     script.constructor = function () {
         script.bindEventHandlers();
         script.socketInitialize();
+        script.actions.getTemplates();
     };
 
     script.init = function () {
