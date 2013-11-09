@@ -30,19 +30,21 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-var server = http.createServer(app).listen(app.get('port'), function () {
+var server = http.createServer(app).listen(app.get('port'), function (err) {
     console.log('Express server listening on port ' + app.get('port'));
+     if (err) { console.error(err); process.exit(-1); }
+
+  	// if run as root, downgrade to the owner of this file
+	if (process.getuid() === 0) {
+		require('fs').stat(__filename, function(err, stats) {
+		if (err) { return console.error(err); }
+		process.setuid(stats.uid);
+		});
+	}
 });
 
 var rtc = holla.createServer(server);
 var io = io.listen(server);
-
-if (process.getuid() === 0) {
-    require('fs').stat(__filename, function(err, stats) {
-      if (err) { return console.error(err); }
-      process.setuid(stats.uid);
-    });
-  }
 
 require("./config/config")(app, io, rtc);
 require("./config/URLMappings").mappings();
