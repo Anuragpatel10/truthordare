@@ -1,26 +1,49 @@
-// https://github.com/nko4/website/blob/master/module/README.md#nodejs-knockout-deploy-check-ins
+/**
+ * Module dependencies.
+ */
 require('nko')('Wg9lXT8VXspD5C-9');
-
-var isProduction = (process.env.NODE_ENV === 'production');
+var express = require('express');
 var http = require('http');
-var port = (isProduction ? 80 : 8000);
+var path = require('path');
+var holla = require("holla");
+var io = require("socket.io");
+var isProduction = (process.env.NODE_ENV === 'production');
+var port = (isProduction ? 80 : 8000)
+var app = express();
 
-http.createServer(function (req, res) {
-  // http://blog.nodeknockout.com/post/35364532732/protip-add-the-vote-ko-badge-to-your-app
-  var voteko = '<iframe src="http://nodeknockout.com/iframe/team-ninja" frameborder=0 scrolling=no allowtransparency=true width=115 height=25></iframe>';
+// all environments
+app.set('port', port);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(express.cookieParser('your secret here'));
+app.use(express.session());
+app.use(app.router);
+app.use(require('stylus').middleware(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-  res.writeHead(200, {'Content-Type': 'text/html'});
-  res.end('<html><body>' + voteko + '</body></html>\n');
-}).listen(port, function(err) {
-  if (err) { console.error(err); process.exit(-1); }
+// development only
+if ('development' == app.get('env')) {
+    app.use(express.errorHandler());
+}
 
-  // if run as root, downgrade to the owner of this file
-  if (process.getuid() === 0) {
+var server = http.createServer(app).listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
+});
+
+var rtc = holla.createServer(server);
+var io = io.listen(server);
+
+if (process.getuid() === 0) {
     require('fs').stat(__filename, function(err, stats) {
       if (err) { return console.error(err); }
       process.setuid(stats.uid);
     });
   }
 
-  console.log('Server running at http://0.0.0.0:' + port + '/');
-});
+require("./config/config")(app, io, rtc);
+require("./config/URLMappings").mappings();
+require("./modules/socket")();

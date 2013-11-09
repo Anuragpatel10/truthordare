@@ -1,4 +1,4 @@
-exports = module.exports = function(app){
+exports = module.exports = function(app, io, rtc){
     global.app = app;
     global.io = io;
     global.rtc = rtc;

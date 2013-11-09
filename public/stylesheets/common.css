@@ -131,5 +131,41 @@ h1 {
 #video4 { left: -50px; top: 610px; }
 #videoMe { left: -700px; top: 610px;  }
 
-/* >>> CLASSES <<<--------------------------- */
+#landing-action {
+	padding: 10px;
+	min-height: 500px;
+	background-color: #111;
+	text-align: center;
+}
+#landing-action .logo {
+	margin: 0 auto;
+	width: 820px;
+	height: 300px;
+	background: url('../images/landing-logo.png') no-repeat center center;
+}
+#footer {
+	padding: 10px;
+	margin-top: 20px;
+	background: url('../images/collab-logos.png') no-repeat center center;
+	height: 30px;
+}
 
+/* >>> CLASSES <<<--------------------------- */
+.landing-button {
+	outline: none;
+	padding: 20px 0px;
+	width: 380px;
+	text-align: center;
+	cursor: pointer;
+	font-family: 'Oswald', sans-serif;
+	font-weight: bold;
+	border: 0px;
+	margin: 15px;
+	color: #ddd;
+	font-size: 36px;
+	transition: color .3s, background .8s;
+}
+.start { background-color: #6c9c5c; }
+.start:hover { background-color: #fff; color: #333; }
+.join { background-color: #9f2c38; }
+.join:hover { background-color: #fff; color: #333; }
