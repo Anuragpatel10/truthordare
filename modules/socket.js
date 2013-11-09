@@ -2,6 +2,7 @@ var uid = require('uid');
 var twilio = require("twilio");
 
 exports = module.exports = function () {
+    var that = this;
     var usersInRoom = {};
     io.sockets.on('connection', function (socket) {
         socket.on("newGameRequest", function (name) {
@@ -22,12 +23,9 @@ exports = module.exports = function () {
         });
 
         socket.on("sendMessageInvite", function(number){
-            sendMessageInviteThroughTwilio(number, function(err, result){
-                if(err){
-                    socket.emit("inviteResponse", {error:err, result: result});
-                } else socket.emit("inviteResponse", {error:err, result: result});
-
-            });
+            sendMessageInviteThroughTwilio.apply(that, [number, function(err, result){
+                socket.emit("inviteResponse", {"error":err, "result": "SENT"});
+            }]);
         });
     });
 };

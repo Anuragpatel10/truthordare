@@ -88,10 +88,13 @@ var script = (function () {
             console.log(data);
         });
 
-        script.socket.on("inviteResponse", function (data) {
-            if (data.err) {
+        script.socket.on("inviteResponse", function (data){
+            if(data.error){
                 console.log("Sorry! couldn't send the message! Try Again");
-            } else console.log("Message Successfully Sent!");
+            } else {
+                console.log("Message Successfully Sent!");
+                $("#inviteButton").val("");
+            }
         })
     };
 
@@ -102,6 +105,7 @@ var script = (function () {
         $("#gameJoinSubmit").on("click", script.actions.processJoinGame);
         $("#cancelJoinGameSubmit").on("click", script.actions.closeJoinGamePopup);
         $("#cancelGameSubmit").on("click", script.actions.closeGamePopup);
+        $("#inviteButton").on("click", script.actions.sendMessage);
     };
 
     script.constructor = function () {

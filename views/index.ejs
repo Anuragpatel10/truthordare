@@ -33,10 +33,18 @@
 				<input id="cancelGameSubmit" type="button" class="button simple-red" value="Cancel">
 			</div>
 			<div id="waitingForUsersPopup" style="display: none;">
-				<h3 class="green">Share this key with people you want to play with ..</h3>
-				<input id="gameTokenField" class="text" type="text" readonly="true"/><br>
-				<p>Waiting for people to join your room</p>
-				<img src="/images/ajax-loader.gif" alt="Loading">
+				<div class="info">
+					<h3>Share this key to invite people ..</h3>
+					<input id="gameTokenField" class="text" type="text" readonly="true"/><br>
+					<p>Waiting for people to join your room</p>
+				</div>
+				<div class="inviteBySms">
+					<h3>Invite people by SMS</h3>
+					<input id="phoneNumber" class="text" type="phone" placeholder="Enter phone number"/><br>
+					<input id="inviteButton" type="button" class="button simple-green ar" value="Invite">
+				</div>
+				<br>
+				<div class="inviteLoader"><img src="/images/ajax-loader-2.gif" alt="Loading"></div>
 			</div>
 		</div>
 
@@ -53,8 +61,8 @@
             <p>Hello World</p>
         </div>
 		<div id="footer">
-			<input type="text" id="phoneNumber"/>
-            <input type="button"  onclick="script.actions.sendMessage()">
+			<!-- <input type="text" id="phoneNumber"/> -->
+            <!-- <input type="button"  onclick="script.actions.sendMessage()"> -->
 		</div>
 	</div>
 </body>
