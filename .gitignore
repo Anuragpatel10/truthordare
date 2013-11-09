@@ -1,0 +1,5 @@
+.idea
+.idea/
+node_modules/express
+node_modules/ejs
+node_modules/nko
