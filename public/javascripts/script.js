@@ -52,7 +52,9 @@ var script = (function () {
         getTemplates: function () {
             script.templates = {};
             script.templates.gameTemplate = $("#gamePageWrapper")[0].outerHTML;
+            script.templates.onlineUserTemplate = $("#onlineUserTemplate").html();
             $("#gamePageWrapper").remove();
+            $("#onlineUserTemplate").remove();
         },
         startGame: function () {
             script.actions.closeJoinGamePopup();
@@ -78,8 +80,11 @@ var script = (function () {
                         var $el = $("#video" + (i+1));
                         if($el && !$el.attr("data-user")) {
                             $el.attr("data-user", user);
-                            i++;
+                            var userEl = $(script.templates.onlineUserTemplate);
+                            userEl.find(".info").eq(0).html(user);
+                            $("#online-users").append(userEl[0].outerHTML);
                         }
+                        i++;
                     }
                 });
             }
@@ -87,26 +92,23 @@ var script = (function () {
     };
 
     script.socketInitialize = function () {
-        script.socket = io.connect('http://10.1.1.69:8000');
+        script.socket = io.connect('http://10.1.1.18:8000');
 
         script.socket.on("gameInitiated", function (resp) {
             script.roomData = script.roomData || {};
             script.roomData.currentRoom = resp.roomId;
             script.roomData.initiator = resp.name;
             script.actions.showRoomToken(resp.roomId);
-
-
-            script.rtc = holla.createClient();
-            script.rtc.register(resp.name, function(worked){
-                holla.createFullStream(function(err, stream){
-                    holla.pipe(stream, $("#videoMe"));
-                });
-            });
         });
-
         script.socket.on("newPlayerJoined", function (data) {
             script.actions.startGame();
             script.actions.getUsersInRoom();
+            console.dirxml($("#videoMe"));
+            holla.createFullStream(function(err, stream) {
+                if (err) throw err;
+                console.log(err, stream);
+                holla.pipe(stream, $("#videoMe"));
+            });
         });
 
         script.socket.on("joinedGame", function (data) {
@@ -145,7 +147,7 @@ var script = (function () {
     };
 
     script.rtcInitialize = function(){
-
+        script.rtcServer = holla.createClient({debug: true});
     };
 
     script.constructor = function () {
