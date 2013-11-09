@@ -58,6 +58,13 @@ var script = (function () {
         });
     };
 
+    script.initializeMessaging = function(){
+        var number = $("#phoneNumber").val();
+        if(number){
+            script.socket.emit("sendMessageInvite", number)
+        }
+    };
+
     script.bindEventHandlers = function () {
         $("#initGame").on("click", script.actions.openGamePopup);
         $("#joinAGame").on("click", script.actions.openJoinGamePopup);
@@ -70,6 +77,7 @@ var script = (function () {
     script.constructor = function () {
         script.bindEventHandlers();
         script.socketInitialize();
+        script.initializeTwilio();
     };
 
     script.init = function () {
