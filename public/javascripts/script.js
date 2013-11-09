@@ -34,19 +34,28 @@ var script = (function () {
                 console.log("Joining a Room...");
                 script.socket.emit("joinGame", {token: roomId, name:username});
             }
-            //script.actions.closeJoinGamePopup();
+            script.actions.closeJoinGamePopup();
         },
         openJoinGamePopup: function () {
             $("#gameJoinPopupContainer").show();
             $("#gameJoinNameField").focus();
+        },
+        showRoomToken: function (roomId) {
+            $("#gameTokenField").val(roomId);
+            $("#waitingForUsersPopup").show();
+            $("#gameInitPopup").hide();
+            $("#gameTokenField").select();
         }
     };
 
     script.socketInitialize = function () {
-        script.socket = io.connect('http://10.1.1.69:8000');
+        script.socket = io.connect('http://localhost:8000');
 
-        script.socket.on("gameInitiated", function (roomId) {
-            console.log(roomId);
+        script.socket.on("gameInitiated", function (resp) {
+            console.log(resp);
+            script.roomData = script.roomData || {};
+            script.roomData.currentRoom = resp.roomId;
+            script.actions.showRoomToken(resp.roomId);
         });
 
         script.socket.on("newPlayerJoined", function (data) {
