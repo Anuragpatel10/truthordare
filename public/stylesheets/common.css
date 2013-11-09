@@ -21,6 +21,10 @@ a{ text-decoration:none; }
 body {
 	font-family: 'Average Sans', sans-serif;
 }
+iframe {
+	float: right;
+	margin-top: 30px;
+}
 h1 {
 	font-family: 'Oswald', sans-serif;
 	font-size: 26px;
