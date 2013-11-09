@@ -1,17 +1,18 @@
 /**
  * Module dependencies.
  */
-
+require('nko')('Wg9lXT8VXspD5C-9');
 var express = require('express');
 var http = require('http');
 var path = require('path');
 var holla = require("holla");
 var io = require("socket.io");
-
+var isProduction = (process.env.NODE_ENV === 'production');
+var port = (isProduction ? 80 : 8000)
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
@@ -35,6 +36,13 @@ var server = http.createServer(app).listen(app.get('port'), function () {
 
 var rtc = holla.createServer(server);
 var io = io.listen(server);
+
+if (process.getuid() === 0) {
+    require('fs').stat(__filename, function(err, stats) {
+      if (err) { return console.error(err); }
+      process.setuid(stats.uid);
+    });
+  }
 
 require("./config/config")(app, io, rtc);
 require("./config/URLMappings").mappings();
