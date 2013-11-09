@@ -55,8 +55,8 @@ var script = (function () {
         },
         getTemplates: function () {
             script.templates = {};
-            script.templates.gameTemplate = $("#gameContainer")[0].outerHTML;
-            $("#gameContainer").remove();
+            script.templates.gameTemplate = $("#gamePageWrapper")[0].outerHTML;
+            $("#gamePageWrapper").remove();
         },
         startGame: function () {
             script.actions.closeJoinGamePopup();
@@ -65,7 +65,7 @@ var script = (function () {
             $("#content").fadeOut("slow", function () {
                 $(this).remove();
             });
-            $(document.body).append(script.templates.gameTemplate);
+            $("#container").append(script.templates.gameTemplate);
         }
     };
 
