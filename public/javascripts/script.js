@@ -92,13 +92,21 @@ var script = (function () {
     };
 
     script.socketInitialize = function () {
-        script.socket = io.connect('http://10.1.1.18:8000');
+        script.socket = io.connect('http://10.1.1.69:8000');
 
         script.socket.on("gameInitiated", function (resp) {
             script.roomData = script.roomData || {};
             script.roomData.currentRoom = resp.roomId;
             script.roomData.initiator = resp.name;
             script.actions.showRoomToken(resp.roomId);
+
+
+            script.rtc = holla.createClient();
+            script.rtc.register(resp.name, function(worked){
+                holla.createFullStream(function(err, stream){
+                    holla.pipe(stream, $("#videoMe"));
+                });
+            });
         });
 
         script.socket.on("newPlayerJoined", function (data) {
@@ -141,10 +149,15 @@ var script = (function () {
         $("#inviteButton").on("click", script.actions.sendMessage);
     };
 
+    script.rtcInitialize = function(){
+
+    };
+
     script.constructor = function () {
         script.bindEventHandlers();
         script.socketInitialize();
         script.actions.getTemplates();
+        script.rtcInitialize();
     };
 
     script.init = function () {
