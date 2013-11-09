@@ -103,11 +103,12 @@ var script = (function () {
         script.socket.on("newPlayerJoined", function (data) {
             script.actions.startGame();
             script.actions.getUsersInRoom();
-            console.dirxml($("#videoMe"));
             holla.createFullStream(function(err, stream) {
-                if (err) throw err;
-                console.log(err, stream);
-                holla.pipe(stream, $("#videoMe"));
+                script.rtcServer.register(data.name, function() {
+                    if (err) throw err;
+                    console.log(err, stream);
+                    holla.pipe(stream, $("#videoMe"));
+                });
             });
         });
 
