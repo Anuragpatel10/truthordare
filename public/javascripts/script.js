@@ -32,7 +32,7 @@ var script = (function () {
             var username = $("#gameJoinNameField").val();
             if (roomId) {
                 console.log("Joining a Room...");
-                script.socket.emit("joinGame", {token: roomId, name:username});
+                script.socket.emit("joinGame", {token: roomId, name: username});
             }
             script.actions.closeJoinGamePopup();
         },
@@ -45,6 +45,13 @@ var script = (function () {
             $("#waitingForUsersPopup").show();
             $("#gameInitPopup").hide();
             $("#gameTokenField").select();
+        },
+        sendMessage: function () {
+            var number = $("#phoneNumber").val();
+            if (number) {
+                console.log(number);
+                script.socket.emit("sendMessageInvite", number);
+            }
         }
     };
 
@@ -65,13 +72,12 @@ var script = (function () {
         script.socket.on("joinedGame", function (data) {
             console.log(data);
         });
-    };
 
-    script.initializeMessaging = function(){
-        var number = $("#phoneNumber").val();
-        if(number){
-            script.socket.emit("sendMessageInvite", number)
-        }
+        script.socket.on("inviteResponse", function(data){
+            if(data.err){
+                console.log("Sorry! couldn't send the message! Try Again");
+            } else console.log("Message Successfully Sent!");
+        })
     };
 
     script.bindEventHandlers = function () {
@@ -86,7 +92,6 @@ var script = (function () {
     script.constructor = function () {
         script.bindEventHandlers();
         script.socketInitialize();
-        script.initializeTwilio();
     };
 
     script.init = function () {

@@ -22,13 +22,18 @@ exports = module.exports = function () {
         });
 
         socket.on("sendMessageInvite", function(number){
-            sendMessageInviteThroughTwilio(number);
+            sendMessageInviteThroughTwilio(number, function(err, result){
+                if(err){
+                    socket.emit("inviteResponse", {error:err, result: result});
+                } else socket.emit("inviteResponse", {error:err, result: result});
+
+            });
         });
     });
 };
 
 
-function sendMessageInviteThroughTwilio(number){
+function sendMessageInviteThroughTwilio(number, callback){
     var client = new twilio.RestClient('ACfb944b59f4c888d49666be23900ca366', '41a8b2de3d17a9f83c70e0ff8032fc15');
     client.sms.messages.create({
         to: number,
@@ -36,14 +41,14 @@ function sendMessageInviteThroughTwilio(number){
         body:'Hey, You have been invited to play TruthAndDare'
     }, function(error, message) {
         if (!error) {
-            console.log('Success! The SID for this SMS message is:');
-            console.log(message.sid);
-
             console.log('Message sent on:');
             console.log(message.dateCreated);
+            callback(null, message);
         }
         else {
+            console.log(error);
             console.log('Oops! There was an error.');
+            callback(error, null);
         }
     });
 }
