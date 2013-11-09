@@ -52,7 +52,9 @@ var script = (function () {
         getTemplates: function () {
             script.templates = {};
             script.templates.gameTemplate = $("#gamePageWrapper")[0].outerHTML;
+            script.templates.onlineUserTemplate = $("#onlineUserTemplate").html();
             $("#gamePageWrapper").remove();
+            $("#onlineUserTemplate").remove();
         },
         startGame: function () {
             script.actions.closeJoinGamePopup();
@@ -78,8 +80,11 @@ var script = (function () {
                         var $el = $("#video" + (i+1));
                         if($el && !$el.attr("data-user")) {
                             $el.attr("data-user", user);
-                            i++;
+                            var userEl = $(script.templates.onlineUserTemplate);
+                            userEl.find(".info").eq(0).html(user);
+                            $("#online-users").append(userEl[0].outerHTML);
                         }
+                        i++;
                     }
                 });
             }
