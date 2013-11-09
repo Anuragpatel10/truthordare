@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -8,6 +7,8 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var holla = require("holla");
+var io = require("socket.io");
 
 var app = express();
 
@@ -27,12 +28,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+    app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/users', user.list);
+global.app = app;
+require("./config/URLMappings").mappings();
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+var server = http.createServer(app).listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
 });
+
+var rtc = holla.createServer(server);
+var io = io.listen(server);
