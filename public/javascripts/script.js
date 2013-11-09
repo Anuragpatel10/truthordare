@@ -65,7 +65,7 @@ var script = (function () {
             $("#content").fadeOut("slow", function () {
                 $(this).remove();
             });
-            $("#container").append(script.templates.gameTemplate);
+            $("#header").after(script.templates.gameTemplate);
         }
     };
 
