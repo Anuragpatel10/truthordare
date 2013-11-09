@@ -25,11 +25,24 @@
 			</div>
 		</div>
 
-        <div id="gameInitPopup">
-            <h3> Just a moment before you start...</h3>
-            <input type="text" placeholder="Enter your name"/>
-            <input id="startAGame" type="button" class="landing-button start" value="Start a game">
-        </div>
+		<div id="gameInitPopupContainer" style="display: none;">
+			<div id="gameInitPopup">
+				<h3> Just a moment before you start...</h3>
+				<input id="gameInitNameField" class="text" type="text" placeholder="Enter your name"/><br>
+				<input id="gameSubmit" type="button" class="button simple-green" value="Start the game">
+				<input id="cancelGameSubmit" type="button" class="button simple-red" value="Cancel">
+			</div>
+		</div>
+
+		<div id="gameJoinPopupContainer" style="display: none;">
+			<div id="gameJoinPopup">
+				<h3> Just a moment before you start...</h3>
+				<input id="gameJoinNameField" class="text" type="text" placeholder="Enter your name"/><br>
+				<input id="gameJoinTokenField" class="text" type="text" placeholder="Enter game token"/><br>
+				<input id="gameJoinSubmit" type="button" class="button simple-green" value="Join room">
+				<input id="cancelJoinGameSubmit" type="button" class="button simple-red" value="Cancel">
+			</div>
+		</div>
 		<div id="footer">
 			
 		</div>
