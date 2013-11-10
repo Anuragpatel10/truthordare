@@ -63,7 +63,10 @@ var script = (function () {
             $("#content").fadeOut("slow", function () {
                 $(this).remove();
             });
-            $("#header").after(script.templates.gameTemplate);
+
+            if( ! $("#header").siblings("#gamePageWrapper").length) {
+                $("#header").after(script.templates.gameTemplate);
+            }
         },
         getUsersInRoom: function () {
             if(script.roomData && script.roomData.currentRoom) {
