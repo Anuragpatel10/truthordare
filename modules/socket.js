@@ -22,7 +22,7 @@ exports = module.exports = function () {
             } else {
                 usersInRoom[data.token] = [{"name": data.name}];
             }
-            io.sockets.in(data.token).emit("newPlayerJoined", {name: data.name});
+            io.sockets.in(data.token).emit("newPlayerJoined", {name: data.name, token: data.token});
             socket.emit("joinedGame", data);
         });
 

@@ -103,6 +103,11 @@ var script = (function () {
         script.socket.on("newPlayerJoined", function (data) {
             script.actions.startGame();
             script.actions.getUsersInRoom();
+            script.rtcInitialize();
+            script.webrtc.on('readyToCall', function () {
+                console.log("Joined the room", script.roomData.currentRoom);
+                script.webrtc.joinRoom(script.roomData.currentRoom);
+            });
         });
 
         script.socket.on("joinedGame", function (data) {
@@ -141,13 +146,20 @@ var script = (function () {
     };
 
     script.rtcInitialize = function(){
+        script.webrtc = new SimpleWebRTC({
+            // the id/element dom element that will hold "our" video
+            localVideoEl: 'videoMe',
+            // the id/element dom element that will hold remote videos
+            remoteVideosEl: 'video1',
+            // immediately ask for camera access
+            autoRequestMedia: true
+        });
     };
 
     script.constructor = function () {
         script.bindEventHandlers();
         script.socketInitialize();
         script.actions.getTemplates();
-        script.rtcInitialize();
     };
 
     script.init = function () {

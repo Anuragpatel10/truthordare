@@ -37,6 +37,10 @@ body {
 h1 {
 	color: #fff;
 }
+video {
+    height: 180px;
+    width: 200px;
+}
 
 /* >>> IDs <<<--------------------------- */
 #container {
