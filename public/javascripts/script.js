@@ -1,11 +1,20 @@
 var script = (function () {
     var script = {};
+    script.game = {};
 
     script.domElementsEnum = {
         "GAME_ID": "#gameRoomId",
         "USER_NAME": "#gameInitNameField",
         "JOIN_USERNAME": "#gameJoinNameField",
         "JOIN_TOKEN": "#gameJoinTokenField"
+    };
+
+    script.game.regions = {
+        "1": { from: 3.7, to: 0.3 },
+        "2": { from: 0.5, to: 1.1 },
+        "3": { from: 1.3, to: 1.8 },
+        "4": { from: 2.1, to: 2.7 },
+        "5": { from: 2.9, to: 3.5 }
     };
 
     script.actions = {
@@ -55,7 +64,11 @@ var script = (function () {
         sendMessage: function () {
             var number = $("#phoneNumber").val();
             if (number) {
-                script.socket.emit("sendMessageInvite", {number: number, token : script.roomData.currentRoom, initiator: script.roomData.initiator});
+                script.socket.emit("sendMessageInvite", {
+                    number: number, 
+                    token : script.roomData.currentRoom, 
+                    initiator: script.roomData.initiator
+                });
             }
         },
         getTemplates: function () {
@@ -68,13 +81,14 @@ var script = (function () {
         startGame: function () {
             script.actions.closeJoinGamePopup();
             script.actions.closeGamePopup();
-
+            
             $("#content").fadeOut("slow", function () {
                 $(this).remove();
             });
 
             if( ! $("#header").siblings("#gamePageWrapper").length) {
                 $("#header").after(script.templates.gameTemplate);
+                script.bindEventHandlers();
             }
         },
         getUsersInRoom: function () {
@@ -107,11 +121,79 @@ var script = (function () {
                     }
                 });
             }
+        },
+        getPointedVideo: function (quadrant) {
+            var activeVideo = -1;
+            console.log(">>", Math.round(quadrant));
+            switch(Math.round(quadrant)) {
+                case 1: 
+                    if(script.game.regions["1"].to>= quadrant && script.game.regions["1"].from >= quadrant) {
+                        activeVideo = 1;
+                    } else if(script.game.regions["2"].to >= quadrant && script.game.regions["2"].from <= quadrant) {
+                        activeVideo = 2;
+                    }
+                    break;
+                case 2:
+                    if(script.game.regions["3"].to>= quadrant && script.game.regions["3"].from <= quadrant) {
+                        activeVideo = 3;
+                    }
+                    break;
+                case 3:
+                console.log(quadrant, script.game.regions["4"]);
+                    if(script.game.regions["4"].to>= quadrant && script.game.regions["4"].from <= quadrant) {
+                        activeVideo = 4;
+                    }
+                    break;
+                case 4:
+                    if(script.game.regions["5"].to>= quadrant && script.game.regions["5"].from <= quadrant) {
+                        activeVideo = 5;
+                    } else if(script.game.regions["1"].from >= quadrant) {
+                        activeVideo = 1;
+                    }
+                    break;
+            }
+            console.log(activeVideo);
+            return activeVideo;
+        },
+        bottleHandler: function () {
+            var angle = 0;
+            $el = $("#bottle");
+            if(script.game.spinAngle) {
+                angle = script.game.spinAngle;
+            }
+            var quadrant = Math.random() * 4;
+            var newSpinAngle = ((Math.random() * 90) * quadrant) + (360*5) + angle;
+            console.log((Math.random() * 90) * quadrant);
+            script.game.spinAngle = newSpinAngle;
+            script.socket.emit("bottleSpinAmount", {angle: newSpinAngle, quadrant: quadrant});
+            $el.css({
+                transform: "rotate(" + Math.floor(newSpinAngle) + "deg)",
+            });
+            setTimeout(function () {
+                var activeVideo = script.actions.getPointedVideo((quadrant / 90 * 4));
+                if(activeVideo > 0) {
+                    $("#game-container>video").removeClass("active").eq(activeVideo).addClass("active");
+                }
+            }, 3000);
+        },
+        spinBottle: function (data) {
+            if(script.game.spinAngle) {
+                script.game.spinAngle = data.angle;
+            }
+            $("#bottle").css({
+                transform: "rotate(" + Math.floor(data.angle) + "deg)",
+            });
+            setTimeout(function () {
+                var activeVideo = script.actions.getPointedVideo(quadrant);
+                if(activeVideo > 0) {
+                    $("#game-container>video").removeClass("active").eq(activeVideo).addClass("active");
+                }
+            }, 3000);
         }
     };
 
     script.socketInitialize = function () {
-        script.socket = io.connect('http://10.1.1.69:8000');
+        script.socket = io.connect('http://10.1.1.18:8000');
 
         script.socket.on("gameInitiated", function (resp) {
             script.roomData = script.roomData || {};
@@ -127,6 +209,9 @@ var script = (function () {
                 console.log("Joined the room", script.roomData.currentRoom);
                 script.webrtc.joinRoom(script.roomData.currentRoom);
             });
+        });
+        script.socket.on("bottleSpinAmountResponse", function (data) {
+            script.actions.spinBottle(data);
         });
         script.socket.on("roomFull", function (data) {
             script.actions.handleRoomFull(data);
@@ -157,13 +242,14 @@ var script = (function () {
     };
 
     script.bindEventHandlers = function () {
-        $("#initGame").on("click", script.actions.openGamePopup);
-        $("#joinAGame").on("click", script.actions.openJoinGamePopup);
-        $("#gameSubmit").on("click", script.actions.processInitGame);
-        $("#gameJoinSubmit").on("click", script.actions.processJoinGame);
-        $("#cancelJoinGameSubmit").on("click", script.actions.closeJoinGamePopup);
-        $("#cancelGameSubmit").on("click", script.actions.closeGamePopup);
-        $("#inviteButton").on("click", script.actions.sendMessage);
+        $("#initGame").off("click").on("click", script.actions.openGamePopup);
+        $("#joinAGame").off("click").on("click", script.actions.openJoinGamePopup);
+        $("#gameSubmit").off("click").on("click", script.actions.processInitGame);
+        $("#gameJoinSubmit").off("click").on("click", script.actions.processJoinGame);
+        $("#cancelJoinGameSubmit").off("click").on("click", script.actions.closeJoinGamePopup);
+        $("#cancelGameSubmit").off("click").on("click", script.actions.closeGamePopup);
+        $("#inviteButton").off("click").on("click", script.actions.sendMessage);
+        $("#bottle").off("click").on("click", script.actions.bottleHandler);
     };
 
     script.rtcInitialize = function(){
