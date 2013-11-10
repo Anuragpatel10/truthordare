@@ -108,8 +108,14 @@ var script = (function () {
             if (script.roomData.users) {
                 var i = 0;
                 $("#online-users").empty();
+                $("#game-container").find('div').remove();
                 script.roomData.users.forEach(function (user, idx) {
-                    if (user.name == script.roomData.initiator) {
+
+                    var el = $("<div></div>");
+                    el.html(user.name);
+                    $("#game-container").append(el);
+
+                    /*if (user.name == script.roomData.initiator) {
                         $("#videoMe").attr("data-user", user.name);
                     } else {
                         var $el = $("#video" + (i + 1));
@@ -120,7 +126,7 @@ var script = (function () {
                             $("#online-users").append(userEl[0].outerHTML);
                         }
                         i++;
-                    }
+                    }*/
                 });
             }
         },
@@ -153,12 +159,12 @@ var script = (function () {
             $el.css({
                 transform: "rotate(" + Math.floor(newSpinAngle) + "deg)",
             });
-            setTimeout(function () {
+            /*setTimeout(function () {
                 var activeVideo = script.actions.getPointedVideo(newSpinAngle%360);
                 if(activeVideo > 0) {
-                    $("#game-container>video").removeClass("active").eq(activeVideo).addClass("active");
+                    $("#game-container>div").removeClass("active").eq(activeVideo).addClass("active");
                 }
-            }, 3000);
+            }, 3000);*/
         },
         spinBottle: function (data) {
             if(script.game.spinAngle) {
@@ -167,12 +173,12 @@ var script = (function () {
             $("#bottle").css({
                 transform: "rotate(" + Math.floor(data.angle) + "deg)",
             });
-            setTimeout(function () {
+            /*setTimeout(function () {
                 var activeVideo = script.actions.getPointedVideo(data.angle%360);
                 if(activeVideo > 0) {
-                    $("#game-container>video").removeClass("active").eq(activeVideo).addClass("active");
+                    $("#game-container>div").removeClass("active").eq(activeVideo).addClass("active");
                 }
-            }, 3000);
+            }, 3000);*/
         },
         sendChatMessage: function (e) {
             if(e.which == 13) {
@@ -283,11 +289,8 @@ var script = (function () {
     script.rtcInitialize = function () {
         if (!script.webrtc) {
             script.webrtc = new SimpleWebRTC({
-                // the id/element dom element that will hold "our" video
                 localVideoEl: 'videoMe',
-                // the id/element dom element that will hold remote videos
                 remoteVideosEl: 'game-container',
-                // immediately ask for camera access
                 autoRequestMedia: true
             });
         }

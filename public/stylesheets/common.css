@@ -37,6 +37,7 @@ body {
 h1 {
 	color: #fff;
 }
+h3 { font-family: "Oswald", sans-serif; color: #fff;}
 /* >>> IDs <<<--------------------------- */
 #container {
 	width: 1200px;
@@ -116,23 +117,38 @@ h1 {
 	top: 25px;
 }
 #game-container {
-	margin-top: 50px; overflow: hidden; min-height: 800px;
+	position: relative;
+	margin-top: 50px; overflow: hidden; min-height: 1200px;
 	background: url('../images/center-table-flat.png') no-repeat 230px center;
 }
 video {
-	position: relative;
 	background-color: #111;	
 	width: 200px;
 	height: 180px;
 }
-video.active {
-	box-shadow: 0px 0px 30px #fd0;
+
+#game-container div { 
+	width: 150px; 
+	box-sizing: border-box;
+	padding: 20px;
+	font-family: "Oswald", sans-serif;
+	font-weight: bold;
+	font-size: 22px;
+	height: 80px;
+	background-color: #c49839; 
+	color: #222;
+	text-align: center;
+	position: absolute;
 }
-#game-container video:nth-child(2)  { left: 120px; top: 0px; }
-#game-container video:nth-child(3)  { left: 250px; top: 230px; }
-#game-container video:nth-child(4)  { left: 0px; top: 550px; }
-#game-container video:nth-child(5)  { left: -800px; top: 230px;}
-#videoMe { top: 550px; left: 60px; }
+#game-container div:nth-child(2)  { left: 350px; top: 280px; }
+#game-container div:nth-child(3)  { left: 650px; top: 450px; }
+#game-container div:nth-child(4)  { left: 600px; top: 750px; }
+#game-container div:nth-child(5)  { left: 120px; top: 750px; }
+#game-container div:nth-child(6)  { left: 70px; top: 450px;}
+
+#game-container div.active {
+	box-shadow: 0px 0px 50px #ff0;
+}
 
 #landing-action {
 	padding: 10px;
@@ -214,9 +230,10 @@ video.active {
 }
 #bottle {
 	position: relative;
+	cursor: pointer;
 	background: url("../images/bottle.png") no-repeat center center;
 	width: 92px; height: 300px;
-	top: -550px; left: 380px;
+	top: -750px; left: 380px;
 
 	-webkit-transition-duration: 3s;
     -moz-transition-duration: 3s;
@@ -233,7 +250,7 @@ video.active {
 #chatWindow {
 	float: right;
 	width: 300px;
-	max-height: 500px;
+	max-height: 600px;
 	overflow: hidden;
 }
 #chatWindow .action {
