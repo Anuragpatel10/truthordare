@@ -30,11 +30,7 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-var server = http.createServer(app).listen(app.get('port'));
-var io = io.listen(server);
-var rtc = holla.createServer(server);
-
-/*server.listen(app.get('port'), function (err) {
+var server = http.createServer(app).listen(app.get('port'), function (err) {
     console.log('Express server listening on port ' + app.get('port'));
      if (err) { console.error(err); process.exit(-1); }
 
@@ -45,7 +41,9 @@ var rtc = holla.createServer(server);
 		process.setuid(stats.uid);
 		});
 	}
-});*/
+});
+
+var io = io.listen(server);
 
 require("./config/config")(app, io, rtc);
 require("./config/URLMappings").mappings();

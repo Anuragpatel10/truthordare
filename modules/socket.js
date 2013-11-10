@@ -6,8 +6,8 @@ exports = module.exports = function () {
     var usersInRoom = {};
     io.sockets.on('connection', function (socket) {
         socket.on("newGameRequest", function (name) {
-            var id = uid(7);
-            usersInRoom[id] = [name];
+            var id = uid(3);
+            usersInRoom[id] = [{"name": name, "initiator": true}];
             console.log("Socket Room Created ---", id);
             console.log("Users in Room ---", io.sockets.clients(id));
             socket.join(id);
@@ -18,11 +18,11 @@ exports = module.exports = function () {
         socket.on("joinGame", function (data) {
             socket.join(data.token);
             if(usersInRoom && usersInRoom[data.token] && usersInRoom[data.token].length > 0) {
-                usersInRoom[data.token].push(data.name);
+                usersInRoom[data.token].push({"name": data.name});
             } else {
-                usersInRoom[data.token] = [data.name];
+                usersInRoom[data.token] = [{"name": data.name}];
             }
-            io.sockets.in(data.token).emit("newPlayerJoined", data);
+            io.sockets.in(data.token).emit("newPlayerJoined", {name: data.name});
             socket.emit("joinedGame", data);
         });
 

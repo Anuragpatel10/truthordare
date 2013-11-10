@@ -74,14 +74,14 @@ var script = (function () {
             if(script.roomData.users) {
                 var i = 0;
                 script.roomData.users.forEach(function(user, idx) {
-                    if(user == script.roomData.initiator) {
-                        $("#videoMe").attr("data-user", user);
+                    if(user.name == script.roomData.initiator) {
+                        $("#videoMe").attr("data-user", user.name);
                     } else {
                         var $el = $("#video" + (i+1));
                         if($el && !$el.attr("data-user")) {
-                            $el.attr("data-user", user);
+                            $el.attr("data-user", user.name);
                             var userEl = $(script.templates.onlineUserTemplate);
-                            userEl.find(".info").eq(0).html(user);
+                            userEl.find(".info").eq(0).html(user.name);
                             $("#online-users").append(userEl[0].outerHTML);
                         }
                         i++;
@@ -103,13 +103,6 @@ var script = (function () {
         script.socket.on("newPlayerJoined", function (data) {
             script.actions.startGame();
             script.actions.getUsersInRoom();
-            holla.createFullStream(function(err, stream) {
-                script.rtcServer.register(data.name, function() {
-                    if (err) throw err;
-                    console.log(err, stream);
-                    holla.pipe(stream, $("#videoMe"));
-                });
-            });
         });
 
         script.socket.on("joinedGame", function (data) {
