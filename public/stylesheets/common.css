@@ -37,11 +37,6 @@ body {
 h1 {
 	color: #fff;
 }
-video {
-    height: 180px;
-    width: 200px;
-}
-
 /* >>> IDs <<<--------------------------- */
 #container {
 	width: 1200px;
@@ -124,17 +119,17 @@ video {
 	margin-top: 50px; overflow: hidden; min-height: 800px;
 	background: url('../images/center-table-flat.png') no-repeat 230px center;
 }
-#video1, #video2, #video3, #video4, #videoMe{
+video {
 	position: relative;
 	background-color: #111;	
 	width: 200px;
 	height: 180px;
 }
-#video1 {left: 325px;}
-#video2 { left: -200px; top: 280px; }
-#video3 { left: 250px; top: 280px; }
-#video4 { left: -50px; top: 610px; }
-#videoMe { left: -700px; top: 610px;  }
+#game-container video:nth-child(2)  { left: 120px; top: 0px; }
+#game-container video:nth-child(3)  { left: 250px; top: 230px; }
+#game-container video:nth-child(4)  { left: 0px; top: 550px; }
+#game-container video:nth-child(5)  { left: -800px; top: 230px;}
+#videoMe { top: 550px; left: 60px; }
 
 #landing-action {
 	padding: 10px;
