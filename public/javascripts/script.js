@@ -9,13 +9,13 @@ var script = (function () {
         "JOIN_TOKEN": "#gameJoinTokenField"
     };
 
-    script.game.regions = {
-        "1": { from: 3.7, to: 0.3 },
-        "2": { from: 0.5, to: 1.1 },
-        "3": { from: 1.3, to: 1.8 },
-        "4": { from: 2.1, to: 2.7 },
-        "5": { from: 2.9, to: 3.5 }
-    };
+    script.game.regions = [
+        { min: 334, max: 36 },
+        { min: 37, max: 109 },
+        { min: 110, max: 182 },
+        { min: 183, max: 255 },
+        { min: 256, max: 333 }
+    ];
 
     script.actions = {
         resetPopupFields: function () {
@@ -75,8 +75,10 @@ var script = (function () {
             script.templates = {};
             script.templates.gameTemplate = $("#gamePageWrapper")[0].outerHTML;
             script.templates.onlineUserTemplate = $("#onlineUserTemplate").html();
+            script.templates.chatMessageTemplate = $("#chatMessageTemplate").html();
             $("#gamePageWrapper").remove();
             $("#onlineUserTemplate").remove();
+            $("#chatMessageTemplate").remove();
         },
         startGame: function () {
             script.actions.closeJoinGamePopup();
@@ -122,37 +124,20 @@ var script = (function () {
                 });
             }
         },
-        getPointedVideo: function (quadrant) {
-            var activeVideo = -1;
-            console.log(">>", Math.round(quadrant));
-            switch(Math.round(quadrant)) {
-                case 1: 
-                    if(script.game.regions["1"].to>= quadrant && script.game.regions["1"].from >= quadrant) {
+        getPointedVideo: function (angle) {
+            var activeVideo = 1;
+            if(script.roomData && script.roomData.users) {
+                script.game.regions.forEach(function (region, idx) {
+                    if(angle >= region.min && angle <= region.max) {
+                        activeVideo = idx+1;
+                        return false;
+                    }
+                    if(idx == 0 && (angle <= region.min && angle >= region.max)) {
                         activeVideo = 1;
-                    } else if(script.game.regions["2"].to >= quadrant && script.game.regions["2"].from <= quadrant) {
-                        activeVideo = 2;
+                        return false;
                     }
-                    break;
-                case 2:
-                    if(script.game.regions["3"].to>= quadrant && script.game.regions["3"].from <= quadrant) {
-                        activeVideo = 3;
-                    }
-                    break;
-                case 3:
-                console.log(quadrant, script.game.regions["4"]);
-                    if(script.game.regions["4"].to>= quadrant && script.game.regions["4"].from <= quadrant) {
-                        activeVideo = 4;
-                    }
-                    break;
-                case 4:
-                    if(script.game.regions["5"].to>= quadrant && script.game.regions["5"].from <= quadrant) {
-                        activeVideo = 5;
-                    } else if(script.game.regions["1"].from >= quadrant) {
-                        activeVideo = 1;
-                    }
-                    break;
+                });
             }
-            console.log(activeVideo);
             return activeVideo;
         },
         bottleHandler: function () {
@@ -162,15 +147,14 @@ var script = (function () {
                 angle = script.game.spinAngle;
             }
             var quadrant = Math.random() * 4;
-            var newSpinAngle = ((Math.random() * 90) * quadrant) + (360*5) + angle;
-            console.log((Math.random() * 90) * quadrant);
+            var newSpinAngle = ((Math.random() * 150) * quadrant) + (360*4) + angle;
             script.game.spinAngle = newSpinAngle;
             script.socket.emit("bottleSpinAmount", {angle: newSpinAngle, quadrant: quadrant});
             $el.css({
                 transform: "rotate(" + Math.floor(newSpinAngle) + "deg)",
             });
             setTimeout(function () {
-                var activeVideo = script.actions.getPointedVideo((quadrant / 90 * 4));
+                var activeVideo = script.actions.getPointedVideo(newSpinAngle%360);
                 if(activeVideo > 0) {
                     $("#game-container>video").removeClass("active").eq(activeVideo).addClass("active");
                 }
@@ -184,29 +168,37 @@ var script = (function () {
                 transform: "rotate(" + Math.floor(data.angle) + "deg)",
             });
             setTimeout(function () {
-                var activeVideo = script.actions.getPointedVideo(quadrant);
+                var activeVideo = script.actions.getPointedVideo(data.angle%360);
                 if(activeVideo > 0) {
                     $("#game-container>video").removeClass("active").eq(activeVideo).addClass("active");
                 }
             }, 3000);
         },
-        sendChatMessage: function () {
-            var message = $("#chatTextBox").val();
-            if (message) {
-                script.socket.emit("chat", {token: script.roomData.currentRoom, message: message, sender: script.roomData.initiator, pictureData: script.currentUserPicData});
+        sendChatMessage: function (e) {
+            if(e.which == 13) {
+                var message = $(this).val();
+                console.log(message);
+                if (message) {
+                    script.socket.emit("chat", {
+                        token: script.roomData.currentRoom, 
+                        message: message, 
+                        sender: script.roomData.initiator, 
+                        pictureData: script.currentUserPicData
+                    });
+                }
             }
         },
         takePictureOfCurrentUser: function () {
             var video = document.querySelector('#videoMe');
             var canvas = document.querySelector('#canvas');
-            var photo = document.querySelector('#photo');
+            // var photo = document.querySelector('#photo');
             var width = $("#videoMe").width();
             var height = $("#videoMe").height();
             canvas.width = width;
             canvas.height = height;
             canvas.getContext('2d').drawImage(video, 0, 0, width, height);
             script.currentUserPicData = canvas.toDataURL('image/png');
-            photo.setAttribute('src', script.currentUserPicData);
+            // photo.setAttribute('src', script.currentUserPicData);
         }
     };
 
@@ -263,8 +255,16 @@ var script = (function () {
 
         script.socket.on("chat", function (data) {
             console.log(data);
-            $("#messageWindow").append("<img height='50px' class=" + JSON.stringify(data.sender) + " src /><strong>" + data.sender + ": " + data.message + "</strong> <br/>").hide().fadeIn(1000);
-            $("."+ data.sender).attr("src", data.pictureData);
+            var $el = $(script.templates.chatMessageTemplate);
+            $el.find("img").attr("src", data.pictureData).addClass(JSON.stringify(data.sender));
+            $el.find("span.name").html(data.sender);
+            $el.find("p").html(data.message);
+            console.log($el);
+            if(data.sender == script.roomData.initiator) {
+                $el.addClass("me");
+                $("#chatTextBox").val("");
+            }
+            $("#chatWindow .messages").append($el.hide().fadeIn(800)).scrollTop($('#chatWindow .messages')[0].scrollHeight);
         });
     };
 
@@ -277,6 +277,7 @@ var script = (function () {
         $("#cancelGameSubmit").off("click").on("click", script.actions.closeGamePopup);
         $("#inviteButton").off("click").on("click", script.actions.sendMessage);
         $("#bottle").off("click").on("click", script.actions.bottleHandler);
+        $("#chatTextBox").off("keyup").on("keyup", script.actions.sendChatMessage);
     };
 
     script.rtcInitialize = function () {

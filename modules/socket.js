@@ -24,7 +24,7 @@ exports = module.exports = function () {
                 if(usersInRoom[data.token].length < 5) {
                     usersInRoom[data.token].push({"name": data.name});
                 } else {
-                    socket.emit("roomFull", {room: data.token, user: });
+                    socket.emit("roomFull", {room: data.token, user: data.name});
                     return;
                 }
             } else {

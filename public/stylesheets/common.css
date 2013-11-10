@@ -229,14 +229,56 @@ video.active {
     transition-property: transform;
     overflow:hidden;
 }
-/* #bottle:hover {
-    -webkit-transform: rotate(1596deg);
-    -moz-transform: rotate(1596deg);
-    -ms-transform: rotate(1596deg);
-    -o-transform: rotate(1596deg);
-    transform: rotate(1596deg);
-} */
 
+#chatWindow {
+	float: right;
+	width: 300px;
+	max-height: 500px;
+	overflow: hidden;
+}
+#chatWindow .action {
+	position: relative;
+	bottom: 0px;
+}
+#chatWindow .action input{
+	font-family: "Oswald", sans-serif;
+	padding: 10px;
+	width: 100%;
+	height: 30px;
+	font-size: 22px;
+	background-color: #333;
+	color: #555;
+	border: 0px;
+	outline: none;
+}
+#chatWindow .messages { 
+	border: 1px solid #111; 
+	max-height: 440px;
+	min-height: 440px;
+	overflow-y: auto;
+}
+#chatWindow .message {
+	padding: 10px; 
+	border-bottom: 1px solid #111;
+	overflow: auto;
+}
+#chatWindow .message img {float: left; width: 50px; height: 50px;}
+#chatWindow .message.me img {float: right;}
+#chatWindow .message p {
+	display: block;
+	float: left;
+	color: #555;
+	margin-left: 5px;
+}
+#chatWindow .message.me p {float: right;  margin-right: 5px;}
+#chatWindow .message span {
+	margin-left: 5px;
+	float: left;
+	font-weight: bold;
+	padding: 0 4px;
+	color: #888;
+}
+#chatWindow .message.me span { float: right; margin-right: 5px;}
 /* >>> CLASSES <<<--------------------------- */
 .al { text-align: left;}
 .ar { text-align: right;}
