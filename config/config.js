@@ -1,7 +1,6 @@
-exports = module.exports = function(app, io, rtc){
+exports = module.exports = function(app, io){
     global.app = app;
     global.io = io;
-    global.rtc = rtc;
 
 
 

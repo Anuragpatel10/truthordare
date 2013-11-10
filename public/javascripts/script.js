@@ -141,7 +141,6 @@ var script = (function () {
     };
 
     script.rtcInitialize = function(){
-        script.rtcServer = holla.createClient({debug: true});
     };
 
     script.constructor = function () {

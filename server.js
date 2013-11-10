@@ -5,7 +5,6 @@ require('nko')('Wg9lXT8VXspD5C-9');
 var express = require('express');
 var http = require('http');
 var path = require('path');
-var holla = require("holla");
 var io = require("socket.io");
 var isProduction = (process.env.NODE_ENV === 'production');
 var port = (isProduction ? 80 : 8000)
@@ -45,6 +44,6 @@ var server = http.createServer(app).listen(app.get('port'), function (err) {
 
 var io = io.listen(server);
 
-require("./config/config")(app, io, rtc);
+require("./config/config")(app, io);
 require("./config/URLMappings").mappings();
 require("./modules/socket")();
