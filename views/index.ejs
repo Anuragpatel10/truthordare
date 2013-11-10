@@ -38,7 +38,7 @@
 				<div class="info">
 					<h3>Share this key to invite people ..</h3>
 					<input id="gameTokenField" class="text" type="text" readonly="true"/><br>
-					<p>Waiting for people to join your room</p>
+					<p>Waiting for people to join the game</p>
 				</div>
 				<div class="inviteBySms">
 					<h3>Invite people by SMS</h3>
@@ -55,7 +55,7 @@
 				<h3> Just a moment before you start...</h3>
 				<input id="gameJoinNameField" class="text" type="text" placeholder="Enter your name"/><br>
 				<input id="gameJoinTokenField" class="text" type="text" placeholder="Enter game token"/><br>
-				<input id="gameJoinSubmit" type="button" class="button simple-green" value="Join room">
+				<input id="gameJoinSubmit" type="button" class="button simple-green" value="Join Game">
 				<input id="cancelJoinGameSubmit" type="button" class="button simple-red" value="Cancel">
 			</div>
 		</div>
@@ -73,6 +73,15 @@
 				<video id="videoMe" autoplay="true"></video>
 			</div>
 			<div id="bottle"></div>
+            <div id="chatWindow">
+                <canvas id="canvas"></canvas>
+                <img id="photo" src />
+                <div id="messageWindow">
+
+                </div>
+                <input type="text" id="chatTextBox" placeholder="Enter a message...">
+                <input type="button" value="Send" onclick="script.actions.sendChatMessage()">
+            </div>
 		</div>
 		<div id="footer">
 		</div>

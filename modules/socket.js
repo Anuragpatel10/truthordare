@@ -13,6 +13,10 @@ exports = module.exports = function () {
             socket.emit("gameInitiated", {name: name, roomId: id});
         });
 
+        socket.on("chat", function(data){
+            io.sockets.in(data.token).emit("chat", {sender: data.sender, message: data.message, pictureData: data.pictureData});
+        });
+
 
         socket.on("joinGame", function (data) {
             socket.join(data.token);
