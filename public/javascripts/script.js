@@ -9,14 +9,23 @@ var script = (function () {
     };
 
     script.actions = {
+        resetPopupFields: function () {
+            $("#gameJoinTokenField").val("");
+            $("#gameJoinNameField").val("");
+            $("#gameInitNameField").val("");
+            $("#gameTokenField").val("");
+            $("#phoneNumber").val("");
+        },
         openGamePopup: function () {
             $("#gameInitPopupContainer").show();
             $("#gameInitNameField").focus();
         },
         closeGamePopup: function () {
+            script.actions.resetPopupFields();
             $("#gameInitPopupContainer").hide();
         },
         closeJoinGamePopup: function () {
+            script.actions.resetPopupFields();
             $("#gameJoinPopupContainer").hide();
         },
         processInitGame: function () {
@@ -72,6 +81,12 @@ var script = (function () {
             if (script.roomData && script.roomData.currentRoom) {
                 script.socket.emit("getUsersInRoom", script.roomData.currentRoom);
             }
+        },
+        handleRoomFull: function (data) {
+            script.actions.closeGamePopup();
+            script.actions.closeJoinGamePopup();
+            alert("Hey " + data.name + ", the game you are trying to join is currently full, you may wait or start a new game.");
+            script.actions.openGamePopup();
         },
         populateDataAndStream: function () {
             if (script.roomData.users) {
@@ -134,7 +149,9 @@ var script = (function () {
                 script.actions.takePictureOfCurrentUser();
             }, 5000);
         });
-
+        script.socket.on("roomFull", function (data) {
+            script.actions.handleRoomFull(data);
+        });
         script.socket.on("joinedGame", function (data) {
             script.roomData = script.roomData || {};
             script.roomData.initiator = data.name;
