@@ -63,7 +63,10 @@ var script = (function () {
             $("#content").fadeOut("slow", function () {
                 $(this).remove();
             });
-            $("#header").after(script.templates.gameTemplate);
+
+            if( ! $("#header").siblings("#gamePageWrapper").length) {
+                $("#header").after(script.templates.gameTemplate);
+            }
         },
         getUsersInRoom: function () {
             if(script.roomData && script.roomData.currentRoom) {
@@ -146,14 +149,16 @@ var script = (function () {
     };
 
     script.rtcInitialize = function(){
-        script.webrtc = new SimpleWebRTC({
-            // the id/element dom element that will hold "our" video
-            localVideoEl: 'videoMe',
-            // the id/element dom element that will hold remote videos
-            remoteVideosEl: 'video1',
-            // immediately ask for camera access
-            autoRequestMedia: true
-        });
+        if(!script.webrtc) {
+            script.webrtc = new SimpleWebRTC({
+                // the id/element dom element that will hold "our" video
+                localVideoEl: 'videoMe',
+                // the id/element dom element that will hold remote videos
+                remoteVideosEl: 'game-container',
+                // immediately ask for camera access
+                autoRequestMedia: true
+            });
+        }
     };
 
     script.constructor = function () {
