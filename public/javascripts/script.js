@@ -46,7 +46,7 @@ var script = (function () {
         sendMessage: function () {
             var number = $("#phoneNumber").val();
             if (number) {
-                script.socket.emit("sendMessageInvite", number);
+                script.socket.emit("sendMessageInvite", {number: number, token : script.roomData.currentRoom, initiator: script.roomData.initiator});
             }
         },
         getTemplates: function () {
@@ -95,7 +95,7 @@ var script = (function () {
     };
 
     script.socketInitialize = function () {
-        script.socket = io.connect('http://10.1.1.18:8000');
+        script.socket = io.connect('http://10.1.1.69:8000');
 
         script.socket.on("gameInitiated", function (resp) {
             script.roomData = script.roomData || {};
