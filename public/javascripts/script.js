@@ -46,7 +46,7 @@ var script = (function () {
         sendMessage: function () {
             var number = $("#phoneNumber").val();
             if (number) {
-                script.socket.emit("sendMessageInvite", {number: number, token : script.roomData.currentRoom, initiator: script.roomData.initiator});
+                script.socket.emit("sendMessageInvite", {number: number, token: script.roomData.currentRoom, initiator: script.roomData.initiator});
             }
         },
         getTemplates: function () {
@@ -64,25 +64,25 @@ var script = (function () {
                 $(this).remove();
             });
 
-            if( ! $("#header").siblings("#gamePageWrapper").length) {
+            if (!$("#header").siblings("#gamePageWrapper").length) {
                 $("#header").after(script.templates.gameTemplate);
             }
         },
         getUsersInRoom: function () {
-            if(script.roomData && script.roomData.currentRoom) {
+            if (script.roomData && script.roomData.currentRoom) {
                 script.socket.emit("getUsersInRoom", script.roomData.currentRoom);
             }
         },
         populateDataAndStream: function () {
-            if(script.roomData.users) {
+            if (script.roomData.users) {
                 var i = 0;
                 $("#online-users").empty();
-                script.roomData.users.forEach(function(user, idx) {
-                    if(user.name == script.roomData.initiator) {
+                script.roomData.users.forEach(function (user, idx) {
+                    if (user.name == script.roomData.initiator) {
                         $("#videoMe").attr("data-user", user.name);
                     } else {
-                        var $el = $("#video" + (i+1));
-                        if($el && !$el.attr("data-user")) {
+                        var $el = $("#video" + (i + 1));
+                        if ($el && !$el.attr("data-user")) {
                             $el.attr("data-user", user.name);
                             var userEl = $(script.templates.onlineUserTemplate);
                             userEl.find(".info").eq(0).html(user.name);
@@ -92,6 +92,24 @@ var script = (function () {
                     }
                 });
             }
+        },
+        sendChatMessage: function () {
+            var message = $("#chatTextBox").val();
+            if (message) {
+                script.socket.emit("chat", {token: script.roomData.currentRoom, message: message, sender: script.roomData.initiator, pictureData: script.currentUserPicData});
+            }
+        },
+        takePictureOfCurrentUser: function () {
+            var video = document.querySelector('#videoMe');
+            var canvas = document.querySelector('#canvas');
+            var photo = document.querySelector('#photo');
+            var width = $("#videoMe").width();
+            var height = $("#videoMe").height();
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext('2d').drawImage(video, 0, 0, width, height);
+            script.currentUserPicData = canvas.toDataURL('image/png');
+            photo.setAttribute('src', script.currentUserPicData);
         }
     };
 
@@ -112,6 +130,9 @@ var script = (function () {
                 console.log("Joined the room", script.roomData.currentRoom);
                 script.webrtc.joinRoom(script.roomData.currentRoom);
             });
+            setTimeout(function(){
+                script.actions.takePictureOfCurrentUser();
+            }, 5000);
         });
 
         script.socket.on("joinedGame", function (data) {
@@ -123,20 +144,26 @@ var script = (function () {
 
         script.socket.on("usersInRoomResponse", function (data) {
             script.roomData = script.roomData || {};
-            if(data.length) {
+            if (data.length) {
                 script.roomData.users = data;
                 script.actions.populateDataAndStream();
             }
         });
 
-        script.socket.on("inviteResponse", function (data){
-            if(data.error){
+        script.socket.on("inviteResponse", function (data) {
+            if (data.error) {
                 console.log("Sorry! couldn't send the message! Try Again");
             } else {
                 console.log("Message Successfully Sent!");
                 $("#phoneNumber").val("");
             }
-        })
+        });
+
+        script.socket.on("chat", function (data) {
+            console.log(data);
+            $("#messageWindow").append("<img height='50px' class=" + JSON.stringify(data.sender) + " src /><strong>" + data.sender + ": " + data.message + "</strong> <br/>").hide().fadeIn(1000);
+            $("."+ data.sender).attr("src", data.pictureData);
+        });
     };
 
     script.bindEventHandlers = function () {
@@ -149,8 +176,8 @@ var script = (function () {
         $("#inviteButton").on("click", script.actions.sendMessage);
     };
 
-    script.rtcInitialize = function(){
-        if(!script.webrtc) {
+    script.rtcInitialize = function () {
+        if (!script.webrtc) {
             script.webrtc = new SimpleWebRTC({
                 // the id/element dom element that will hold "our" video
                 localVideoEl: 'videoMe',
