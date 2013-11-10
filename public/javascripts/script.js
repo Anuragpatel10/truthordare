@@ -159,12 +159,6 @@ var script = (function () {
             $el.css({
                 transform: "rotate(" + Math.floor(newSpinAngle) + "deg)",
             });
-            /*setTimeout(function () {
-                var activeVideo = script.actions.getPointedVideo(newSpinAngle%360);
-                if(activeVideo > 0) {
-                    $("#game-container>div").removeClass("active").eq(activeVideo).addClass("active");
-                }
-            }, 3000);*/
         },
         spinBottle: function (data) {
             if(script.game.spinAngle) {
@@ -173,12 +167,6 @@ var script = (function () {
             $("#bottle").css({
                 transform: "rotate(" + Math.floor(data.angle) + "deg)",
             });
-            /*setTimeout(function () {
-                var activeVideo = script.actions.getPointedVideo(data.angle%360);
-                if(activeVideo > 0) {
-                    $("#game-container>div").removeClass("active").eq(activeVideo).addClass("active");
-                }
-            }, 3000);*/
         },
         sendChatMessage: function (e) {
             if(e.which == 13) {
@@ -209,7 +197,7 @@ var script = (function () {
     };
 
     script.socketInitialize = function () {
-        script.socket = io.connect('http://10.1.1.18:8000');
+        script.socket = io.connect('http://team-ninja.2013.nodeknockout.com');
 
         script.socket.on("gameInitiated", function (resp) {
             script.roomData = script.roomData || {};
