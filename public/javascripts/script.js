@@ -76,6 +76,7 @@ var script = (function () {
         populateDataAndStream: function () {
             if(script.roomData.users) {
                 var i = 0;
+                $("#online-users").empty();
                 script.roomData.users.forEach(function(user, idx) {
                     if(user.name == script.roomData.initiator) {
                         $("#videoMe").attr("data-user", user.name);
