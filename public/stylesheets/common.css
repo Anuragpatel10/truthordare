@@ -141,7 +141,7 @@ video {
 	margin: 0 auto;
 	width: 820px;
 	height: 300px;
-	background: url('../images/landing-logo.png') no-repeat center center;
+	background: url('../images/landing-logo-alt.png') no-repeat center center;
 }
 #footer {
 	padding: 10px;
@@ -208,6 +208,31 @@ video {
 #inviteButton {
 	float: right;
 	margin-right: 30px;
+}
+#bottle {
+	position: relative;
+	background: url("../images/bottle.png") no-repeat center center;
+	width: 92px; height: 300px;
+	top: -550px; left: 380px;
+
+	-webkit-transition-duration: 2.5s;
+    -moz-transition-duration: 2.5s;
+    -o-transition-duration: 2.5s;
+    transition-duration: 2.5s;
+     
+    -webkit-transition-property: -webkit-transform;
+    -moz-transition-property: -moz-transform;
+    -o-transition-property: -o-transform;
+    transition-property: transform;
+     
+    overflow:hidden;
+}
+#bottle:hover {
+    -webkit-transform: rotate(1596deg);
+    -moz-transform: rotate(1596deg);
+    -ms-transform: rotate(1596deg);
+    -o-transform: rotate(1596deg);
+    transform: rotate(1596deg);
 }
 
 /* >>> CLASSES <<<--------------------------- */
