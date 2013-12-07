@@ -110,23 +110,9 @@ var script = (function () {
                 $("#online-users").empty();
                 $("#game-container").find('div').remove();
                 script.roomData.users.forEach(function (user, idx) {
-
                     var el = $("<div></div>");
                     el.html(user.name);
                     $("#game-container").append(el);
-
-                    /*if (user.name == script.roomData.initiator) {
-                        $("#videoMe").attr("data-user", user.name);
-                    } else {
-                        var $el = $("#video" + (i + 1));
-                        if ($el && !$el.attr("data-user")) {
-                            $el.attr("data-user", user.name);
-                            var userEl = $(script.templates.onlineUserTemplate);
-                            userEl.find(".info").eq(0).html(user.name);
-                            $("#online-users").append(userEl[0].outerHTML);
-                        }
-                        i++;
-                    }*/
                 });
             }
         },
@@ -155,9 +141,9 @@ var script = (function () {
             var quadrant = Math.random() * 4;
             var newSpinAngle = ((Math.random() * 150) * quadrant) + (360*4) + angle;
             script.game.spinAngle = newSpinAngle;
-            script.socket.emit("bottleSpinAmount", {angle: newSpinAngle, quadrant: quadrant});
+            script.socket.emit("bottleSpinAmount", {angle: newSpinAngle, quadrant: quadrant, token: script.roomData.currentRoom});
             $el.css({
-                transform: "rotate(" + Math.floor(newSpinAngle) + "deg)",
+                transform: "rotate(" + Math.floor(newSpinAngle) + "deg)"
             });
         },
         spinBottle: function (data) {
@@ -165,7 +151,7 @@ var script = (function () {
                 script.game.spinAngle = data.angle;
             }
             $("#bottle").css({
-                transform: "rotate(" + Math.floor(data.angle) + "deg)",
+                transform: "rotate(" + Math.floor(data.angle) + "deg)"
             });
         },
         sendChatMessage: function (e) {
@@ -197,7 +183,7 @@ var script = (function () {
     };
 
     script.socketInitialize = function () {
-        script.socket = io.connect('http://team-ninja.2013.nodeknockout.com');
+        script.socket = io.connect('10.1.1.69:8000');
 
         script.socket.on("gameInitiated", function (resp) {
             script.roomData = script.roomData || {};

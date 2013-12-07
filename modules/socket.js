@@ -44,6 +44,10 @@ exports = module.exports = function () {
             console.log("Sending users list for room ", roomId);
             socket.emit("usersInRoomResponse", usersInRoom[roomId]);
         });
+
+        socket.on("bottleSpinAmount", function(data){
+            socket.broadcast.to(data.token).emit("bottleSpinAmountResponse", data);
+        });
     });
 };
 
